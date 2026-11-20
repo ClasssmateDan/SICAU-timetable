@@ -51,7 +51,7 @@
       menu.append(button);
     }
     const version = document.createElement('p'); version.id = 'mobile-app-version'; version.className = 'mobile-app-version';
-    version.textContent = '版本 ' + window.__KEJIAN_VERSION__; menu.append(version);
+    version.textContent = 'SICAU timetable · 版本 ' + window.__KEJIAN_VERSION__; menu.append(version);
     document.body.append(more);
     $('mobile-more-close').onclick = () => more.close();
     const courseActions = document.querySelector('#course-dialog .course-footer-actions');
@@ -79,7 +79,7 @@
     markView(); window.addEventListener('hashchange', markView);
     const native = $('native-reminder-section');
     native.querySelector('strong').textContent = '上下课与备忘录通知';
-    native.querySelector('p:last-child').textContent = '提醒由手机系统安排，关闭页面后仍可运行。请允许通知；若需要准时提醒，可在下方允许“闹钟和提醒”。强行停止应用、关机或系统省电限制可能中断提醒，重新打开课间会恢复安排。';
+    native.querySelector('p:last-child').textContent = '提醒由手机系统安排，关闭页面后仍可运行。请允许通知；若需要准时提醒，可在下方允许“闹钟和提醒”。强行停止应用、关机或系统省电限制可能中断提醒，重新打开 SICAU timetable 会恢复安排。';
     const exact = document.createElement('button'); exact.type = 'button'; exact.id = 'android-exact-reminders'; exact.className = 'button button-white'; exact.textContent = '允许准时提醒';
     exact.onclick = () => window.__KEJIAN_NATIVE_BRIDGE__.postMessage({ type: 'reminders:settings' }); native.append(exact);
     $('reminder-title').textContent = '提醒设置';

@@ -37,7 +37,7 @@ if (!compiler) throw new Error('未找到 .NET Framework 编译器。');
 const iconTool = path.join(root, 'desktop', 'CreateIcon.exe');
 run(compiler, ['/nologo', '/target:exe', '/reference:System.Drawing.dll', '/reference:System.IO.Compression.dll', '/out:' + iconTool, path.join(root, 'desktop', 'CreateIcon.cs')]);
 run(iconTool, [icon]);
-const exeName = `课间课程表-${version}.exe`;
+const exeName = `SICAU-timetable-${version}.exe`;
 const exe = path.join(output, exeName);
 run(compiler, ['/nologo', '/target:winexe', '/platform:x64', '/optimize+', '/win32icon:' + icon,
   '/win32manifest:' + path.join(root, 'desktop', 'app.manifest'),
@@ -78,7 +78,7 @@ const marker = '课间数据/发布资源清单.sha256';
 await mkdir(path.join(stage, '课间数据'), { recursive: true });
 await writeFile(path.join(stage, marker), 'KeJian bundled assets v1\n\n', 'utf8');
 zipFiles.push('课间数据/', marker);
-run(iconTool, ['--zip-root', path.join(output, `Better-SICAU-Desktop-Windows-x64-${version}.zip`), stage, ...zipFiles]);
-try { await copyFile(exe, path.join(output, '课间课程表.exe')); }
+run(iconTool, ['--zip-root', path.join(output, `SICAU-timetable-Windows-x64-${version}.zip`), stage, ...zipFiles]);
+try { await copyFile(exe, path.join(output, 'SICAU-timetable.exe')); }
 catch (error) { console.log('固定文件名可能仍被旧程序占用，请使用新生成的版本号 EXE：' + error.code); }
 console.log('已生成：' + exe);

@@ -21,7 +21,7 @@ final class SigninDiagnostics {
     private static final String HOST = "eol.sicau.edu.cn";
 
     static String collect(Context context) {
-        StringBuilder report = new StringBuilder("课间 · 签到网络诊断\n");
+        StringBuilder report = new StringBuilder("SICAU timetable · 签到网络诊断\n");
         report.append("检测时间：").append(time(System.currentTimeMillis())).append('\n');
         Network active = null;
         try {

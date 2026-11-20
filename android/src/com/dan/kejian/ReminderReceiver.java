@@ -58,10 +58,10 @@ public final class ReminderReceiver extends BroadcastReceiver {
                     preferences(context).edit().putLong("deliveredAt", at).commit();
                     StringBuilder body = new StringBuilder();
                     for (ReminderSchedule.Event event : due) { if (body.length() > 0) body.append("\n\n"); body.append(event.body); }
-                    notify(context, due.size() == 1 ? due.get(0).title : "课间 · 日程提醒", body.toString(), (int) (at / 1000));
+                    notify(context, due.size() == 1 ? due.get(0).title : "SICAU timetable · 日程提醒", body.toString(), (int) (at / 1000));
                 }
             }
             schedule(context);
-        } catch (Exception error) { preferences(context).edit().putString("error", "提醒未能安排，请打开课间检查课表与通知设置。").apply(); }
+        } catch (Exception error) { preferences(context).edit().putString("error", "提醒未能安排，请打开 SICAU timetable 检查课表与通知设置。").apply(); }
     }
 }

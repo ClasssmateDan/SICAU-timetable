@@ -187,7 +187,7 @@ function renderStorageWarning() {
   if (recoveryRaw !== null) {
     const recover = document.createElement('button');
     recover.textContent = '下载原始数据';
-    recover.addEventListener('click', () => download(recoveryRaw, `课间-待恢复数据-${dateKey(new Date())}.json`));
+    recover.addEventListener('click', () => download(recoveryRaw, `SICAU timetable-待恢复数据-${dateKey(new Date())}.json`));
     warning.append(recover);
   }
 }
@@ -662,7 +662,7 @@ $('#reset-preset').addEventListener('click', async () => {
 
 function exportCurrentTimetable() {
   try {
-    download(exportTimetableFile(data), `课间-${data.semester.name.replace(/[<>:"/\\|?*]/g, '-')}-${dateKey(new Date())}.json`);
+    download(exportTimetableFile(data), `SICAU timetable-${data.semester.name.replace(/[<>:"/\\|?*]/g, '-')}-${dateKey(new Date())}.json`);
     if (!nativeBridge) toast('已发起课表下载。恢复时请使用“导入课表”，无需双击 JSON 文件。');
   } catch (error) { toast('课表未导出：' + error.message); }
 }
@@ -708,7 +708,7 @@ $('#download-import-example').addEventListener('click', () => {
   if (!nativeBridge) toast('已发起示例文件下载，请将示例内容替换为本人课程信息。');
 });
 $('#copy-import-guide').addEventListener('click', async () => {
-  const text = '请将我接下来提供的本人课表材料整理为课间可导入的 JSON 文件。请先阅读完整说明，缺少必要信息时向我确认，不要照抄示例。\n\n' + importGuide;
+  const text = '请将我接下来提供的本人课表材料整理为 SICAU timetable 可导入的 JSON 文件。请先阅读完整说明，缺少必要信息时向我确认，不要照抄示例。\n\n' + importGuide;
   try {
     try { await navigator.clipboard.writeText(text); }
     catch {
@@ -863,7 +863,7 @@ $('#export-legacy').addEventListener('click', () => {
   try {
     const raw = localStorage.getItem('kejian.timetable.v1');
     if (raw === null) { toast('没有找到更新前的课表。'); return; }
-    download(raw, '课间-更新前课表.json');
+    download(raw, 'SICAU timetable-更新前课表.json');
   } catch (error) { toast(error.message || '暂时无法读取旧课表。'); }
 });
 
@@ -895,7 +895,7 @@ $('#test-reminder').addEventListener('click', () => {
   try { reminderController.test(); } catch (error) { toast(error.message); }
 });
 $('#export-reminder-plan').addEventListener('click', () => {
-  download(JSON.stringify(createReminderPlan(data), null, 2), '课间提醒计划.json');
+  download(JSON.stringify(createReminderPlan(data), null, 2), 'SICAU timetable 提醒计划.json');
   if (!nativeBridge) toast('已发起提醒计划下载，请在 Windows 提醒工具中载入。');
 });
 async function checkDesktopReminders() {

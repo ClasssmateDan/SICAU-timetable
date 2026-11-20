@@ -77,7 +77,7 @@ if (!existsSync(password)) await writeFile(password, randomBytes(32).toString('b
 if (!existsSync(key)) run(tools.keytool, ['-genkeypair', '-keystore', key, '-storepass:file', password, '-keypass:file', password, '-alias', 'kejian', '-keyalg', 'RSA', '-keysize', '3072', '-validity', '10000', '-dname', 'CN=KeJian Local,O=Personal Projects,C=CN']);
 const manifest = await readFile(path.join(base, 'AndroidManifest.xml'), 'utf8');
 const version = manifest.match(/android:versionName="([\d.]+)"/)[1];
-const target = path.join(root, 'release', `课间课程表-安卓-${version}.apk`);
+const target = path.join(root, 'release', `SICAU-timetable-Android-${version}.apk`);
 run(tools.java, ['-jar', tools.signer, 'sign', '--ks', key, '--ks-key-alias', 'kejian', '--ks-pass', 'file:' + password, '--out', target, aligned]);
 const signature = run(tools.java, ['-jar', tools.signer, 'verify', '--verbose', '--print-certs', target]);
 // Verify an ASCII-named copy too; signing output has the user-facing Chinese name.

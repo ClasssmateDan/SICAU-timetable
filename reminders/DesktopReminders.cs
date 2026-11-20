@@ -30,7 +30,7 @@ internal static partial class DesktopReminders {
             using (SHA256 hash = SHA256.Create()) identity = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(root.ToLowerInvariant()))).Replace("-", "");
             bool created;
             using (Mutex mutex = new Mutex(true, "Local\\KeJianReminders-" + identity, out created)) {
-                if (!created) { MessageBox.Show("提醒工具已在运行，请在右下角托盘中打开课间图标。", "课间提醒"); return 0; }
+                if (!created) { MessageBox.Show("提醒工具已在运行，请在右下角托盘中打开 SICAU timetable 图标。", "SICAU timetable 提醒"); return 0; }
                 using (ReminderContext context = new ReminderContext(root)) {
                     if (args.Length == 1 && args[0] == "--test-notification") context.RunNotificationTest();
                     else context.ShowSettings();
@@ -41,7 +41,7 @@ internal static partial class DesktopReminders {
             return 0;
         } catch (Exception error) {
             if (args.Length > 0 && args[0].StartsWith("--check")) return 1;
-            MessageBox.Show(error.Message, "课间提醒启动失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(error.Message, "SICAU timetable 提醒启动失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return 1;
         }
     }
@@ -78,7 +78,7 @@ internal sealed class ReminderContext : ApplicationContext {
             state.enabled = false;
             state.planPath = Path.Combine(root, "reminder-plan.json");
             plan = DesktopReminders.ReadPlan(state.planPath);
-            MessageBox.Show("上次使用的提醒计划无法读取，已载入内置课表并关闭提醒。请核对或重新载入更新课表后开启。", "课间提醒");
+            MessageBox.Show("上次使用的提醒计划无法读取，已载入内置课表并关闭提醒。请核对或重新载入更新课表后开启。", "SICAU timetable 提醒");
         }
         planModified = File.GetLastWriteTimeUtc(state.planPath);
         lastCheck = DesktopReminders.Now() - 1;
@@ -92,10 +92,10 @@ internal sealed class ReminderContext : ApplicationContext {
         menu.Items.Add("载入更新后的提醒计划…", null, delegate { ChoosePlan(); });
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("退出提醒", null, delegate { ExitThread(); });
-        tray = new NotifyIcon { Icon = SystemIcons.Information, ContextMenuStrip = menu, Visible = true, Text = "课间 · 上下课提醒" };
+        tray = new NotifyIcon { Icon = SystemIcons.Information, ContextMenuStrip = menu, Visible = true, Text = "SICAU timetable · 上下课提醒" };
         tray.DoubleClick += delegate { ShowSettings(); };
 
-        form = new Form { Text = "课间 · 桌面提醒", ClientSize = new Size(520, 320), Font = new Font("Microsoft YaHei UI", 11),
+        form = new Form { Text = "SICAU timetable · 桌面提醒", ClientSize = new Size(520, 320), Font = new Font("Microsoft YaHei UI", 11),
             FormBorderStyle = FormBorderStyle.FixedDialog, MaximizeBox = false, StartPosition = FormStartPosition.CenterScreen };
         enableCheck = new CheckBox { Text = "开启上课、下课桌面提醒", AutoSize = true, Location = new Point(24, 24), Checked = state.enabled };
         enableCheck.CheckedChanged += delegate { if (!changing) ChangeEnabled(enableCheck.Checked); };
@@ -129,14 +129,14 @@ internal sealed class ReminderContext : ApplicationContext {
         bool previous = state.enabled;
         state.enabled = enabled;
         try { Save(); lastCheck = DesktopReminders.Now() - 1; }
-        catch (Exception error) { state.enabled = previous; MessageBox.Show("开关未保存：" + error.Message, "课间提醒"); }
+        catch (Exception error) { state.enabled = previous; MessageBox.Show("开关未保存：" + error.Message, "SICAU timetable 提醒"); }
         changing = true;
         enableMenu.Checked = enableCheck.Checked = state.enabled;
         changing = false;
         UpdateStatus();
     }
     private void UpdateStatus() {
-        tray.Text = state.enabled ? "课间 · 上下课提醒已开启" : "课间 · 上下课提醒已关闭";
+        tray.Text = state.enabled ? "SICAU timetable · 上下课提醒已开启" : "SICAU timetable · 上下课提醒已关闭";
         ReminderEvent next = plan.events.FirstOrDefault(ev => ev.at > DesktopReminders.Now());
         string nextText = next == null ? "本学期没有后续固定节次提醒。" : "下次：" + new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(next.at).ToLocalTime().ToString("MM-dd HH:mm") + " " + next.title;
         details.Text = plan.semesterName + "\n每节上课和下课各提醒一次，按北京时间作息。\n" + nextText + "\n课表修改后，在网页导出提醒计划，再用本窗口载入。\n系统勿扰模式可能阻止弹出，请先点击“测试通知”确认。";
@@ -144,7 +144,7 @@ internal sealed class ReminderContext : ApplicationContext {
     private void Notify(string title, string body) {
         tray.ShowBalloonTip(10000, title, body.Length > 255 ? body.Substring(0, 252) + "…" : body, ToolTipIcon.Info);
     }
-    private void ShowTest() { Notify("课间 · 测试通知", "你正在测试 Windows 桌面通知。\n开启开关后，每节上课、下课会在桌面右下角提醒。"); }
+    private void ShowTest() { Notify("SICAU timetable · 测试通知", "你正在测试 Windows 桌面通知。\n开启开关后，每节上课、下课会在桌面右下角提醒。"); }
     internal void RunNotificationTest() {
         System.Windows.Forms.Timer testTimer = new System.Windows.Forms.Timer { Interval = 1000 };
         int count = 0;
@@ -152,7 +152,7 @@ internal sealed class ReminderContext : ApplicationContext {
         testTimer.Start();
     }
     private void ChoosePlan() {
-        using (OpenFileDialog picker = new OpenFileDialog { Title = "选择网页导出的课间提醒计划", Filter = "课间提醒计划 (*.json)|*.json", InitialDirectory = root }) {
+        using (OpenFileDialog picker = new OpenFileDialog { Title = "选择网页导出的 SICAU timetable 提醒计划", Filter = "SICAU timetable 提醒计划 (*.json)|*.json", InitialDirectory = root }) {
             if (picker.ShowDialog(form) != DialogResult.OK) return;
             try {
                 ReminderPlan replacement = DesktopReminders.ReadPlan(picker.FileName);
@@ -188,7 +188,7 @@ internal sealed class ReminderContext : ApplicationContext {
             try { Save(); } catch { }
             changing = true; enableCheck.Checked = enableMenu.Checked = false; changing = false;
             UpdateStatus();
-            Notify("课间 · 提醒已暂停", error.Message);
+            Notify("SICAU timetable · 提醒已暂停", error.Message);
         }
     }
     protected override void ExitThreadCore() {

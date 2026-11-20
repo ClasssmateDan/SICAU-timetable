@@ -104,7 +104,7 @@ public final class MainActivity extends Activity {
             case "app:ready": ready = true; sendState(); break;
             case "learningpass:open":
                 try { startActivity(new Intent(this, com.dan.qrbatch.MainActivity.class)); }
-                catch (Exception error) { sendError("无法打开学习通签到，请重新打开课间后重试"); }
+                catch (Exception error) { sendError("无法打开学习通签到，请重新打开 SICAU timetable 后重试"); }
                 break;
             case "timetable:sync":
                 store.save(request.getJSONObject("data")); ReminderReceiver.schedule(this); sendState(); break;
@@ -117,19 +117,19 @@ public final class MainActivity extends Activity {
                 }
                 break;
             case "reminders:test":
-                if (!ReminderReceiver.canNotify(this)) { sendError("请先允许课间的通知权限"); break; }
-                ReminderReceiver.notify(this, "课间 · 测试通知", "上课、下课时会在这里提醒你。", 12345); sendState(); break;
+                if (!ReminderReceiver.canNotify(this)) { sendError("请先允许 SICAU timetable 的通知权限"); break; }
+                ReminderReceiver.notify(this, "SICAU timetable · 测试通知", "上课、下课时会在这里提醒你。", 12345); sendState(); break;
             case "reminders:settings":
                 Intent settings;
                 if (Build.VERSION.SDK_INT >= 31 && !ReminderReceiver.exactAllowed(this)) settings = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).setData(Uri.parse("package:" + getPackageName()));
                 else settings = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-                try { startActivity(settings); } catch (ActivityNotFoundException error) { message("请在手机设置中打开课间的通知与提醒权限"); }
+                try { startActivity(settings); } catch (ActivityNotFoundException error) { message("请在手机设置中打开 SICAU timetable 的通知与提醒权限"); }
                 break;
             case "clipboard:copy":
                 JSONObject copied = new JSONObject().put("type", "clipboard:result").put("requestId", request.getLong("requestId"));
                 try {
                     String text = request.getString("text"); if (text.length() > 300000) throw new IOException("复制内容过长");
-                    ((ClipboardManager) getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("课间", text)); copied.put("ok", true);
+                    ((ClipboardManager) getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("SICAU timetable", text)); copied.put("ok", true);
                 } catch (Exception error) { copied.put("ok", false).put("message", error.getMessage()); }
                 send(copied); break;
             case "backup:export":
@@ -212,7 +212,7 @@ public final class MainActivity extends Activity {
         if (!ready) return;
         try {
             boolean enabled = ReminderReceiver.enabled(this), allowed = ReminderReceiver.canNotify(this), exact = ReminderReceiver.exactAllowed(this);
-            String text = !allowed ? "系统通知尚未允许，请在手机设置中允许课间通知。" : !enabled ? "已关闭。打开开关后，将接收上下课、备忘录及节假日提醒。" : exact ? "已开启：上下课、备忘录及节假日到时提醒，修改后自动同步。" : "已开启普通提醒。尚未允许“闹钟和提醒”，系统可能延迟；可点击下方允许准时提醒。";
+            String text = !allowed ? "系统通知尚未允许，请在手机设置中允许 SICAU timetable 通知。" : !enabled ? "已关闭。打开开关后，将接收上下课、备忘录及节假日提醒。" : exact ? "已开启：上下课、备忘录及节假日到时提醒，修改后自动同步。" : "已开启普通提醒。尚未允许“闹钟和提醒”，系统可能延迟；可点击下方允许准时提醒。";
             send(new JSONObject().put("type", "desktop:state").put("ready", true).put("enabled", enabled).put("exact", exact).put("message", text));
         } catch (Exception ignored) { /* next sync retries */ }
     }

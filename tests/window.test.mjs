@@ -14,7 +14,7 @@ for (const periods of [10,16]) test(`Windows ${periods} 节课随窗口缩放，
   const profile = path.join(root,'desktop/.test-profile-window-'+periods+'-'+Date.now());
   await mkdir(profile,{recursive:true});
   await writeFile(path.join(profile,'timetable.json'),JSON.stringify(validateData(table)));
-  const run = spawnSync(path.join(root,`release/课间课程表-${version}.exe`),['--window-test','--data-dir',profile],{windowsHide:true,timeout:30000});
+  const run = spawnSync(path.join(root,`release/SICAU-timetable-${version}.exe`),['--window-test','--data-dir',profile],{windowsHide:true,timeout:30000});
   assert.equal(run.error,undefined);
   const report=JSON.parse((await readFile(path.join(profile,'smoke-result.json'),'utf8')).replace(/^\uFEFF/,''));
   assert.equal(run.status,0,JSON.stringify(report));

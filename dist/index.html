@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f7f8fa">
-  <meta name="description" content="课间，本地保存的桌面课程表。轻松管理每周课程、单双周安排和学期计划。">
-  <title>课间 · 我的课程表</title>
+  <meta name="description" content="SICAU timetable，本地保存的桌面课程表。轻松管理每周课程、单双周安排和学期计划。">
+  <title>SICAU timetable · 我的课程表</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
   <script defer src="./app.js"></script>
@@ -14,7 +14,7 @@
   <noscript>请在浏览器中启用 JavaScript，以使用课表和本地保存功能。</noscript>
   <div class="app-shell">
     <aside class="sidebar" aria-label="主导航">
-      <a class="brand" href="#timetable" aria-label="课间首页"><span class="brand-mark" data-icon="calendar"></span><span>课间<span class="brand-en">KEJIAN</span></span></a>
+      <a class="brand" href="#timetable" aria-label="SICAU timetable 首页"><span class="brand-mark" data-icon="calendar"></span><span class="brand-name">SICAU<span class="brand-en">timetable</span></span></a>
       <div class="workspace-label">我的学习空间 <span class="tiny-dot"></span></div>
       <nav class="nav-list">
         <button class="nav-item active" data-view="timetable"><span data-icon="grid"></span>我的课表</button>
@@ -56,7 +56,7 @@
           <div class="calendar-scroll"><div id="calendar" class="calendar" role="group" aria-label="周课程表"></div></div>
           <div class="calendar-footer"><div class="semester-caption"><span data-icon="calendar"></span><span id="semester-caption"></span></div><span class="calendar-hint"><span data-icon="pointer"></span>点击空白节次添加课程，点击课程编辑</span></div>
         </div>
-        <div class="below-calendar"><span><span class="status-dot"></span>给忙碌一点秩序，给生活一点留白。</span><span>课间 · 把每一周过好</span></div>
+        <div class="below-calendar"><span><span class="status-dot"></span>给忙碌一点秩序，给生活一点留白。</span><span>SICAU timetable · 把每一周过好</span></div>
         <button id="unscheduled-summary" class="unscheduled-summary" data-view="courses" hidden><strong id="unscheduled-count">0</strong> 门课程暂不排课，包含教师自行安排的实践课和 MOOC · 查看全部课程 →</button>
       </section>
 
@@ -85,7 +85,7 @@
       <section id="qr-view" hidden aria-label="二维码预测">
         <iframe id="qr-frame" title="二维码预测工具" allow="clipboard-write" referrerpolicy="no-referrer"></iframe>
       </section>
-      <footer class="app-footer"><span>KEJIAN / 课间</span><span>从容规划，高效学习。</span></footer>
+      <footer class="app-footer"><span>SICAU timetable</span><span>从容规划，高效学习。</span></footer>
     </main>
   </div>
 
@@ -147,7 +147,7 @@
       <ol class="import-steps">
         <li><h3>先获取本人课表</h3><p>从教务系统下载课表，或准备清晰的截图、PDF、Excel、课程清单。请包含周课表下方的课程明细与“编号”列，并确认第一周的星期一、学期周数和每天的作息时间。</p><details class="import-guide" id="classid-acquisition-guide"><summary>如何获取签到 classid（选填）</summary><div class="classid-acquisition"><p>先查看教务课表下方的课程明细，完整复制课程名称、编号、教师和上课安排；能取得实际课表 HTML 时也一起交给 AI。若源码只有 iframe 标签，请进入框架中的实际课表内容再复制。</p><p>已明确标注或确认对应的 classid 可直接填写。只有“编号”列时，可再从 EOL 本人课程链接的 <code>classid=数字</code> 核对；<code>courseid</code>、<code>sno</code>、<code>sessionid</code> 不是签到 classid。理论课、实验课分别核对，无法确认就留空。</p><p>完整步骤和核对示例已包含在下方可复制、下载的格式说明中。</p></div></details></li>
         <li><h3>让 AI 按说明生成课表文件</h3><p>将本人课表材料与下方格式说明一起提交给 AI，生成 UTF-8 的 <strong>.json</strong> 文件。信息不清楚时先核实，不要让 AI 编造上课时间或 classid。</p><div class="import-tools"><button type="button" class="button button-primary" id="copy-import-guide">复制 AI 提示词与格式说明</button><button type="button" class="button button-white" id="download-import-guide">下载格式说明</button><button type="button" class="button button-white" id="download-import-example">下载 JSON 示例</button></div><details class="import-guide" id="import-full-format-guide"><summary>查看完整数据格式说明</summary><pre id="import-format-guide" tabindex="0"></pre></details></li>
-        <li><h3>选择 JSON，核对后导入</h3><p>已有课间导出的 JSON 可直接使用。文件会先在本机校验，确认导入后才替换当前课表。</p><label class="import-ready"><input type="checkbox" id="import-ready">我已准备好自己的课表文件，或已有导出的课表 JSON</label><div class="import-tools"><button type="button" class="button button-primary" id="choose-import-file" disabled><span data-icon="upload"></span>选择 JSON 文件</button><button type="button" class="button button-white" id="export-before-import">先导出当前课表</button><span id="import-filename" class="field-hint">文件不超过 4 MB</span></div></li>
+        <li><h3>选择 JSON，核对后导入</h3><p>已有 SICAU timetable 导出的 JSON 可直接使用。文件会先在本机校验，确认导入后才替换当前课表。</p><label class="import-ready"><input type="checkbox" id="import-ready">我已准备好自己的课表文件，或已有导出的课表 JSON</label><div class="import-tools"><button type="button" class="button button-primary" id="choose-import-file" disabled><span data-icon="upload"></span>选择 JSON 文件</button><button type="button" class="button button-white" id="export-before-import">先导出当前课表</button><span id="import-filename" class="field-hint">文件不超过 4 MB</span></div></li>
       </ol>
       <div id="import-error" class="form-error" role="alert" hidden></div>
       <section id="import-preview" class="import-preview" aria-label="待导入课表预览" hidden><h3>校验通过，请核对这份课表</h3><p id="import-summary" role="status"></p><p id="import-semester-summary"></p><div class="import-preview-scroll"><table><thead><tr><th>课程</th><th>教师／地点</th><th>上课安排</th><th>classid</th></tr></thead><tbody id="import-preview-courses"></tbody></table></div><p class="import-replace-note">确认后将替换当前学期、全部课程、备忘录及签到记录；旧文件不含日历时将清空当前日历。建议先导出备份。</p></section>

@@ -14,7 +14,7 @@ export function createReminderPlan(timetable) {
           const at = new Date(day.getFullYear(), day.getMonth(), day.getDate(), hours, minutes).getTime();
           events.push({
             id: `${dateKey(day)}|${course.id}|${period}|${kind}|${time}`,
-            at, title: `课间 · ${kind === 'start' ? '上课' : '下课'}提醒`,
+            at, title: `SICAU timetable · ${kind === 'start' ? '上课' : '下课'}提醒`,
             body: `${time} · ${course.name}\n第 ${week} 周 · 第 ${period} 节 · ${room || '地点待定'}${course.teacher ? '\n' + course.teacher : ''}`,
           });
         }
@@ -25,7 +25,7 @@ export function createReminderPlan(timetable) {
     if (!memo.remind || !memo.time) continue;
     // Calendar reminders follow the same campus time zone on every device.
     const at = Date.parse(`${memo.date}T${memo.time}:00+08:00`);
-    events.push({ id: `memo|${memo.id}|${memo.date}|${memo.time}`, at, title: '课间 · 备忘录提醒',
+    events.push({ id: `memo|${memo.id}|${memo.date}|${memo.time}`, at, title: 'SICAU timetable · 备忘录提醒',
       body: `${memo.date} ${memo.time} · ${memo.title}${memo.notes ? '\n' + memo.notes : ''}` });
   }
   events.sort((a, b) => a.at - b.at || a.id.localeCompare(b.id));
@@ -89,7 +89,7 @@ export class BrowserReminderController {
 
   test() {
     if (!this.enabled || this.api?.permission !== 'granted') throw new Error('请先开启并允许浏览器提醒。');
-    this.show({ id: 'kejian-test', title: '课间 · 测试通知', body: '上课、下课时将显示桌面通知。请确认桌面右下角能够正常显示通知。' });
+    this.show({ id: 'kejian-test', title: 'SICAU timetable · 测试通知', body: '上课、下课时将显示桌面通知。请确认桌面右下角能够正常显示通知。' });
   }
 
   tick() {

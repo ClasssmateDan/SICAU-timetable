@@ -15,10 +15,10 @@ using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 
-[assembly: AssemblyTitle("课间课程表")]
-[assembly: AssemblyProduct("课间课程表")]
-[assembly: AssemblyVersion("1.9.1.0")]
-[assembly: AssemblyFileVersion("1.9.1.0")]
+[assembly: AssemblyTitle("SICAU timetable")]
+[assembly: AssemblyProduct("SICAU timetable")]
+[assembly: AssemblyVersion("1.9.2.0")]
+[assembly: AssemblyFileVersion("1.9.2.0")]
 
 namespace KeJianDesktop {
     internal static class Program {
@@ -67,7 +67,7 @@ namespace KeJianDesktop {
             }
         }
         private static void PrepareRuntime() {
-            string sdk = Path.Combine(DataRoot, "runtime", "1.9.1", "sdk");
+            string sdk = Path.Combine(DataRoot, "runtime", "1.9.2", "sdk");
             Directory.CreateDirectory(sdk);
             string loader = Path.Combine(sdk, "WebView2Loader.dll");
             byte[] bytes = Resource("WebView2Loader.dll");
@@ -114,7 +114,7 @@ namespace KeJianDesktop {
                     string legacy = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KeJianTimetable");
                     PortableDataResult portable = PortableData.Prepare(appDirectory,legacy,false);
                     DataRoot = portable.Root;
-                    if (!SmokeTest && !String.IsNullOrEmpty(portable.Warning)) MessageBox.Show(portable.Warning,"课间 · 数据迁移",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    if (!SmokeTest && !String.IsNullOrEmpty(portable.Warning)) MessageBox.Show(portable.Warning,"SICAU timetable · 数据迁移",MessageBoxButtons.OK,MessageBoxIcon.Information);
                 }
                 string temporary = Path.Combine(DataRoot,"temp"); Directory.CreateDirectory(temporary);
                 Environment.SetEnvironmentVariable("TEMP",temporary,EnvironmentVariableTarget.Process);
@@ -134,7 +134,7 @@ namespace KeJianDesktop {
             } catch (Exception error) {
                 Result = 1;
                 if (SmokeTest && DataRoot != null) { try { if (Directory.Exists(DataRoot)) File.WriteAllText(Path.Combine(DataRoot, "smoke-result.json"), DesktopReminders.Json.Serialize(new { ok = false, error = error.ToString() })); } catch (IOException) { } }
-                else MessageBox.Show("无法启动课间课程表：\n" + error.Message + "\n\n请从可写的程序文件夹运行，并确保 Microsoft Edge WebView2 Runtime 可用。", "课间课程表", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else MessageBox.Show("无法启动 SICAU timetable：\n" + error.Message + "\n\n请从可写的程序文件夹运行，并确保 Microsoft Edge WebView2 Runtime 可用。", "SICAU timetable", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return 1;
             }
         }
@@ -173,7 +173,7 @@ namespace KeJianDesktop {
         private object transferExportResult;
 
         internal TimetableWindow() {
-            Text = "课间 · 课程表";
+            Text = "SICAU timetable";
             Rectangle workArea = Screen.PrimaryScreen.WorkingArea;
             ClientSize = new Size(Math.Min(1400, workArea.Width - 80), Math.Min(920, workArea.Height - 80));
             MinimumSize = new Size(1000, 680);
@@ -194,7 +194,7 @@ namespace KeJianDesktop {
                 try { plan = DesktopReminders.ReadPlan(planPath); }
                 catch { settings.remindersEnabled = false; }
             }
-            loading = new Label { Text = "正在打开课间课程表…", Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Microsoft YaHei UI", 16) };
+            loading = new Label { Text = "正在打开 SICAU timetable…", Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Microsoft YaHei UI", 16) };
             browser = new WebView2 { Dock = DockStyle.Fill };
             Controls.Add(browser); Controls.Add(loading);
             ContextMenuStrip menu = new ContextMenuStrip();
@@ -202,16 +202,16 @@ namespace KeJianDesktop {
             reminderMenu = new ToolStripMenuItem("课程与备忘录提醒") { CheckOnClick = true, Checked = settings.remindersEnabled };
             reminderMenu.Click += delegate { SetReminders(reminderMenu.Checked); };
             menu.Items.Add(reminderMenu);
-            menu.Items.Add("测试通知", null, delegate { Notify("课间 · 测试通知", "上课、下课时将在桌面右下角显示提醒。"); });
-            menu.Items.Add("关于课间", null, delegate {
-                using (Form about = new Form { Text = "关于课间课程表 1.9.1", ClientSize = new Size(640, 460), StartPosition = FormStartPosition.CenterParent }) {
-                    about.Controls.Add(new TextBox { Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Vertical, Dock = DockStyle.Fill, Font = new Font("Microsoft YaHei UI", 10), Text = "课间课程表 1.9.1\r\n离线课表管理、二维码预测与上下课提醒\r\n\r\nMicrosoft WebView2 SDK 1.0.4258.31\r\n\r\n" + Encoding.UTF8.GetString(Program.Resource("WebView2.LICENSE.txt")) + "\r\n\r\n" + Encoding.UTF8.GetString(Program.Resource("QR-LICENSES.txt")) });
+            menu.Items.Add("测试通知", null, delegate { Notify("SICAU timetable · 测试通知", "上课、下课时将在桌面右下角显示提醒。"); });
+            menu.Items.Add("关于 SICAU timetable", null, delegate {
+                using (Form about = new Form { Text = "关于 SICAU timetable 1.9.2", ClientSize = new Size(640, 460), StartPosition = FormStartPosition.CenterParent }) {
+                    about.Controls.Add(new TextBox { Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Vertical, Dock = DockStyle.Fill, Font = new Font("Microsoft YaHei UI", 10), Text = "SICAU timetable 1.9.2\r\n离线课表管理、二维码预测与上下课提醒\r\n\r\nMicrosoft WebView2 SDK 1.0.4258.31\r\n\r\n" + Encoding.UTF8.GetString(Program.Resource("WebView2.LICENSE.txt")) + "\r\n\r\n" + Encoding.UTF8.GetString(Program.Resource("QR-LICENSES.txt")) });
                     about.ShowDialog(this);
                 }
             });
             menu.Items.Add(new ToolStripSeparator());
-            menu.Items.Add("退出课间", null, delegate { quitting = true; Close(); });
-            tray = new NotifyIcon { Icon = Icon, Text = "课间课程表", Visible = true, ContextMenuStrip = menu };
+            menu.Items.Add("退出 SICAU timetable", null, delegate { quitting = true; Close(); });
+            tray = new NotifyIcon { Icon = Icon, Text = "SICAU timetable", Visible = true, ContextMenuStrip = menu };
             tray.DoubleClick += delegate { ShowTimetable(); };
             tray.BalloonTipClicked += delegate { ShowTimetable(); };
             lastCheck = DesktopReminders.Now() - 1;
@@ -225,7 +225,7 @@ namespace KeJianDesktop {
 
         private async Task InitializeBrowser() {
             try {
-                string assets = Path.Combine(Program.DataRoot, "runtime", "1.9.1", "assets");
+                string assets = Path.Combine(Program.DataRoot, "runtime", "1.9.2", "assets");
                 Directory.CreateDirectory(assets);
                 File.WriteAllBytes(Path.Combine(assets, "index.html"), Program.Resource("index.html"));
                 CoreWebView2Environment env = await Program.CreateBrowserEnvironment(Path.Combine(Program.DataRoot, "WebView2"));
@@ -291,7 +291,7 @@ namespace KeJianDesktop {
                 Send(new { type = "desktop:error", message = "提醒开关未保存：" + error.Message });
             }
             reminderMenu.Checked = settings.remindersEnabled;
-            tray.Text = settings.remindersEnabled ? "课间 · 系统提醒已开启" : "课间 · 系统提醒已关闭";
+            tray.Text = settings.remindersEnabled ? "SICAU timetable · 系统提醒已开启" : "SICAU timetable · 系统提醒已关闭";
             SendState();
         }
         private void OnWebMessage(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
@@ -313,7 +313,7 @@ namespace KeJianDesktop {
                     plan = updated; ready = true;
                     SendState();
                 } else if (type == "reminders:setEnabled") SetReminders(message.ContainsKey("enabled") && message["enabled"] is bool && (bool)message["enabled"]);
-                else if (type == "reminders:test") Notify("课间 · 测试通知", "每节上课和下课时会在这里提醒。\n课程修改后，提醒计划自动同步，无需额外运行其他工具。");
+                else if (type == "reminders:test") Notify("SICAU timetable · 测试通知", "每节上课和下课时会在这里提醒。\n课程修改后，提醒计划自动同步，无需额外运行其他工具。");
                 else if (type == "backup:export") ExportBackup(message);
                 else if (type == "qr:image-export") ExportQrImage(message);
                 else if (type == "qr:open") OpenQrPage(message);
@@ -343,7 +343,7 @@ namespace KeJianDesktop {
                 string text = message.ContainsKey("text") ? message["text"] as string : null;
                 string suggested = message.ContainsKey("filename") ? message["filename"] as string : null;
                 if (text == null || Encoding.UTF8.GetByteCount(text) > 4000000) throw new InvalidDataException("备份内容为空或过大。");
-                suggested = Path.GetFileName(suggested ?? "课间备份.json");
+                suggested = Path.GetFileName(suggested ?? "SICAU timetable 备份.json");
                 foreach (char invalid in Path.GetInvalidFileNameChars()) suggested = suggested.Replace(invalid, '_');
                 if (!suggested.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) suggested += extension;
                 string path = null;
@@ -352,7 +352,7 @@ namespace KeJianDesktop {
                 } else if (Program.BackupTest != null) {
                     if (Program.BackupTest != "cancel") path = Path.Combine(Program.DataRoot, Program.BackupTest == "error" ? "blocked.json" : Program.BackupTest == "extension" ? "unsafe.exe" : "导出验证.json");
                 } else {
-                    using (SaveFileDialog save = new SaveFileDialog { Title = guide ? "保存课表数据格式说明" : "保存课表 JSON（使用时请在课程表内导入）", FileName = suggested, InitialDirectory = ExportDirectory(), RestoreDirectory = true, Filter = guide ? "Markdown 格式说明 (*.md)|*.md" : "课间 JSON 课表 (*.json)|*.json", DefaultExt = guide ? "md" : "json", AddExtension = true, OverwritePrompt = true }) {
+                    using (SaveFileDialog save = new SaveFileDialog { Title = guide ? "保存课表数据格式说明" : "保存课表 JSON（使用时请在课程表内导入）", FileName = suggested, InitialDirectory = ExportDirectory(), RestoreDirectory = true, Filter = guide ? "Markdown 格式说明 (*.md)|*.md" : "SICAU timetable JSON 课表 (*.json)|*.json", DefaultExt = guide ? "md" : "json", AddExtension = true, OverwritePrompt = true }) {
                         if (save.ShowDialog(this) == DialogResult.OK) path = save.FileName;
                     }
                 }
@@ -391,7 +391,7 @@ namespace KeJianDesktop {
                 using (Image image = Image.FromStream(input, true, true)) {
                     if (image.Width > 4096 || image.Height > 4096) throw new InvalidDataException("二维码图片尺寸过大。");
                 }
-                string suggested = Path.GetFileName(message.ContainsKey("filename") ? message["filename"] as string : null) ?? "课间二维码.png";
+                string suggested = Path.GetFileName(message.ContainsKey("filename") ? message["filename"] as string : null) ?? "SICAU timetable 二维码.png";
                 foreach (char invalid in Path.GetInvalidFileNameChars()) suggested = suggested.Replace(invalid, '_');
                 if (!suggested.EndsWith(".png", StringComparison.OrdinalIgnoreCase)) suggested += ".png";
                 string path = null;

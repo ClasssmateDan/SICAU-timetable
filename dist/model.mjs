@@ -207,7 +207,7 @@ export function findConflicts(candidate, courses, semester) {
 }
 
 export function validateData(input) {
-  if (!input || input.version !== 1 || !Array.isArray(input.courses) || input.courses.length > 500) throw new Error('请选择符合课间格式的 JSON 课表（version 为 1，最多 500 门课程）');
+  if (!input || input.version !== 1 || !Array.isArray(input.courses) || input.courses.length > 500) throw new Error('请选择符合 SICAU timetable 格式的 JSON 课表（version 为 1，最多 500 门课程）');
   const semester = validateSemester(input.semester);
   const courses = input.courses.map(course => validateCourse(course, semester));
   if (new Set(courses.map(course => course.id)).size !== courses.length) throw new Error('文件中存在重复的课程编号');

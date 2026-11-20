@@ -110,7 +110,7 @@ namespace KeJianDesktop {
                     foreach(string name in new [] { LegacyMutexName(source,false), LegacyMutexName(Path.Combine(source,"course-tools"),true) }) {
                         bool created;
                         Mutex mutex=new Mutex(true,name,out created);
-                        if(!created) { mutex.Dispose(); throw new IOException("请先从托盘退出旧版课间及其附带程序，再重新打开新版迁移数据。"); }
+                        if(!created) { mutex.Dispose(); throw new IOException("请先从托盘退出旧版 SICAU timetable 及其附带程序，再重新打开新版迁移数据。"); }
                         held.Add(mutex);
                     }
                 } catch { Dispose(); throw; }
@@ -168,7 +168,7 @@ namespace KeJianDesktop {
             }
             Directory.CreateDirectory(target); EnsureWritable(target);
             string marker = Path.Combine(target,"便携目录说明.txt");
-            if (!File.Exists(marker)) File.WriteAllText(marker,"课间课程表便携数据目录\r\n课表、提醒和浏览器配置都位于此目录。\r\n移动或备份时，请带上 EXE 和整个“课间数据”文件夹。\r\n",new UTF8Encoding(false));
+            if (!File.Exists(marker)) File.WriteAllText(marker,"SICAU timetable 便携数据目录\r\n课表、提醒和浏览器配置都位于此目录。\r\n移动或备份时，请带上 EXE 和整个“课间数据”文件夹。\r\n",new UTF8Encoding(false));
             return result;
         }
         private static void CopyMigration(string app,string source,string target,List<string> directories,List<string> files,PortableDataResult result) {

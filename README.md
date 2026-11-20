@@ -1,4 +1,4 @@
-# Better SICAU · 课间课程表
+# SICAU timetable
 
 Windows 与 Android 离线课程表，支持课程管理、JSON 导入导出、单双周、日历备忘与提醒，安卓版内置学习通签到。
 
@@ -6,11 +6,13 @@ Windows 与 Android 离线课程表，支持课程管理、JSON 导入导出、�
 
 ## 下载与运行
 
-Windows 10/11 x64 用户可从 [Releases](https://github.com/ClasssmateDan/Better_SICAU/releases) 下载 **Better SICAU 桌面版**（`Better-SICAU-Desktop-Windows-x64-1.9.1.zip`）。完整解压到固定、可写的文件夹，运行 `课间课程表-1.9.1.exe`。系统需要 Microsoft Edge WebView2 Runtime；静态网页可以直接打开 `index.html`。
+Windows 10/11 x64 用户可从 [Releases](https://github.com/ClasssmateDan/SICAU-timetable/releases) 下载 **SICAU timetable 桌面版**（`SICAU-timetable-Windows-x64-1.9.2.zip`）。完整解压到固定、可写的文件夹，运行 `SICAU-timetable-1.9.2.exe`。系统需要 Microsoft Edge WebView2 Runtime；静态网页可以直接打开 `index.html`。
 
-Android 8.0 及以上用户可下载 **Better SICAU 安卓版**（`Better-SICAU-Android-1.9.4.apk`）。首次安装为空课表，覆盖升级保留已有数据。底边栏“学习通”提供账号管理、并行活动查询、扫码／选图／粘贴和顺序签到，不申请位置权限或采集本机位置。账号会话单独加密保存，不包含在课表 JSON 中；首次使用需登录本人账号。签到结果与日历中的手动签到标记分别保存。
+Android 8.0 及以上用户可下载 **SICAU timetable 安卓版**（`SICAU-timetable-Android-1.9.5.apk`）。首次安装为空课表，覆盖升级保留已有数据。底边栏“学习通”提供账号管理、并行活动查询、扫码／选图／粘贴和顺序签到，不申请位置权限或采集本机位置。账号会话单独加密保存，不包含在课表 JSON 中；首次使用需登录本人账号。签到结果与日历中的手动签到标记分别保存。
 
 程序数据保存在 EXE 旁的“课间数据”，包括课表、提醒设置、浏览器配置。公开版不自动读取 AppData 中的旧版课表；首次在空目录运行时为空表。已有同目录数据会正常保留，可通过“导入课表”导入本人备份。移动或备份时请保留完整数据目录。
+
+改名版本沿用旧版安卓应用标识、签名、本地数据格式及 Windows 数据目录。安卓可直接覆盖升级；Windows 升级时退出旧版本，将新版完整包解压到原目录即可继续使用原课表、日历和提醒设置。
 
 ## 导入课表
 
@@ -57,6 +59,6 @@ SDK 会从固定来源下载并核对 SHA256；首次准备依赖需要联网。
 
 课程可设置自定义“签到方式”，默认为教务系统。其他方式点击“跳转签到页”时需确认是否继续；旧课表缺少字段时采用默认方式，导入导出会保留该设置。
 
-关闭 Windows 主窗口会静默收起到托盘，与提醒开关无关。双击托盘图标恢复，右键“退出课间”结束程序。“我的课表”随窗口可用宽高调整行列与文字大小。
+关闭 Windows 主窗口会静默收起到托盘，与提醒开关无关。双击托盘图标恢复，右键“退出 SICAU timetable”结束程序。“我的课表”随窗口可用宽高调整行列与文字大小。
 
 新版手机端支持左右滑动课表切周、顶部周末开关；“设置”显示版本号，PC 左下角显示桌面版本号。两端内置 2026 年官方放假调休与 2027 年节日日期，系统提醒开启后可接收当天 09:00 的节假日通知；2027 年调休安排待更新，课程不会自动移动。

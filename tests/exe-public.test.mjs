@@ -10,7 +10,7 @@ import { createHash } from 'node:crypto';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const {version}=JSON.parse(await readFile(path.join(root,'package.json'),'utf8'));
-const filename=`课间课程表-${version}.exe`;
+const filename=`SICAU-timetable-${version}.exe`;
 const exe=path.join(root,'release',filename);
 async function launch(profile,args=[],binary=exe,defaultDirectory=false) {
   const result=spawnSync(binary,['--smoke-test',...(defaultDirectory?[]:['--data-dir',profile]),...args],{windowsHide:true,timeout:50000});
@@ -23,7 +23,7 @@ const fixture=name=>path.join(root,'desktop','.test-profile-u-'+name+'-'+Date.no
 
 test('正式 ZIP 在全新目录启动为空课表，且不包含课程工具',async()=>{
   const folder=fixture('unpacked'); await mkdir(folder,{recursive:true});
-  const unpack=spawnSync('python',['-X','utf8','-c','import zipfile,sys; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])',path.join(root,'release',`Better-SICAU-Desktop-Windows-x64-${version}.zip`),folder],{windowsHide:true,encoding:'utf8'});
+  const unpack=spawnSync('python',['-X','utf8','-c','import zipfile,sys; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])',path.join(root,'release',`SICAU-timetable-Windows-x64-${version}.zip`),folder],{windowsHide:true,encoding:'utf8'});
   assert.equal(unpack.status,0,unpack.stderr);
   const profile=path.join(folder,'课间数据');
   await assert.rejects(readFile(path.join(profile,'course-tools/browser-extension/manifest.json')),{code:'ENOENT'});

@@ -47,7 +47,7 @@ export function holidayYearNote(year) {
 }
 
 export function createHolidayEvents() {
-  const make = (date, kind, body) => ({ id: `holiday|${date}|${kind}`, at: Date.parse(`${date}T09:00:00+08:00`), title: '课间 · 节假日提醒', body });
+  const make = (date, kind, body) => ({ id: `holiday|${date}|${kind}`, at: Date.parse(`${date}T09:00:00+08:00`), title: 'SICAU timetable · 节假日提醒', body });
   const events = HOLIDAY_PERIODS.map(item => make(item.start, 'rest', `${item.name}假期开始 · ${item.start} 至 ${item.end}\n课程以课表和学校通知为准。`));
   for (const item of HOLIDAY_WORKDAYS) events.push(make(item.date, 'work', `${item.date} · ${item.name}调休上班\n课程以课表和学校通知为准。`));
   for (const [date, name] of FESTIVAL_DATES) {

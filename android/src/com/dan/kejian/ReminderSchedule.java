@@ -45,14 +45,14 @@ public final class ReminderSchedule {
                     long at = date.atTime(LocalTime.parse(time)).atZone(CAMPUS_ZONE).toInstant().toEpochMilli();
                     String id = date + "|" + course.id + "|" + period + "|" + kind + "|" + time;
                     String body = time + " · " + course.name + "\n第 " + week + " 周 · 第 " + period + " 节 · " + (room.isEmpty() ? "地点待定" : room) + (course.teacher.isEmpty() ? "" : "\n" + course.teacher);
-                    events.add(new Event(id, at, "课间 · " + (part == 0 ? "上课" : "下课") + "提醒", body));
+                    events.add(new Event(id, at, "SICAU timetable · " + (part == 0 ? "上课" : "下课") + "提醒", body));
                 }
             }
         }
         for (Memo memo : table.memos) {
             if (!memo.remind || memo.time.isEmpty()) continue;
             long at = memo.date.atTime(LocalTime.parse(memo.time)).atZone(CAMPUS_ZONE).toInstant().toEpochMilli();
-            events.add(new Event("memo|" + memo.id + "|" + memo.date + "|" + memo.time, at, "课间 · 备忘录提醒",
+            events.add(new Event("memo|" + memo.id + "|" + memo.date + "|" + memo.time, at, "SICAU timetable · 备忘录提醒",
                 memo.date + " " + memo.time + " · " + memo.title + (memo.notes.isEmpty() ? "" : "\n" + memo.notes)));
         }
         events.sort(Comparator.comparingLong((Event event) -> event.at).thenComparing(event -> event.id));

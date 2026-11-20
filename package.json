@@ -1,9 +1,9 @@
 {
-  "name": "better-sicau",
-  "version": "1.9.1",
+  "name": "sicau-timetable",
+  "version": "1.9.2",
   "private": true,
   "type": "module",
-  "description": "Better SICAU：离线课程表、日历备忘、提醒与安卓学习通签到",
+  "description": "SICAU timetable：离线课程表、日历备忘、提醒与安卓学习通签到",
   "kejianEdition": "public-empty",
   "scripts": {
     "build": "node scripts/build.mjs",
