@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.zxing.BinaryBitmap;
@@ -33,6 +34,7 @@ import com.google.zxing.qrcode.QRCodeReader;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,6 +58,9 @@ public final class CameraScanActivity extends Activity implements SurfaceHolder.
     private PreviewSurface preview;
     private TextView status;
     private Button retryButton;
+    private LinearLayout zoomControls;
+    private SeekBar zoomSlider;
+    private TextView zoomRatio;
     private Camera camera;
     private boolean surfaceReady;
     private volatile boolean resumed;
@@ -105,6 +110,20 @@ public final class CameraScanActivity extends Activity implements SurfaceHolder.
         frame.addView(preview, new FrameLayout.LayoutParams(-1, -1, Gravity.CENTER));
         root.addView(frame, new LinearLayout.LayoutParams(-1, 0, 1));
         preview.getHolder().addCallback(this);
+
+        String zoomLabel = "相机缩放";
+        zoomControls = new LinearLayout(this);
+        zoomControls.setGravity(Gravity.CENTER_VERTICAL);
+        zoomControls.setPadding(dp(20), 0, dp(20), 0);
+        zoomControls.setVisibility(View.GONE);
+        zoomControls.addView(text(zoomLabel, 14, SigninTheme.INK));
+        zoomSlider = new SeekBar(this);
+        zoomSlider.setContentDescription(zoomLabel);
+        zoomControls.addView(zoomSlider, new LinearLayout.LayoutParams(0, dp(48), 1));
+        zoomRatio = text("", 14, SigninTheme.INK);
+        zoomRatio.setMinWidth(dp(56));
+        zoomControls.addView(zoomRatio);
+        root.addView(zoomControls, new LinearLayout.LayoutParams(-1, -2));
 
         status = text("请将二维码完整放入画面", 15, SigninTheme.INK);
         status.setPadding(dp(20), dp(20), dp(20), dp(8));
@@ -234,7 +253,8 @@ public final class CameraScanActivity extends Activity implements SurfaceHolder.
                 parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
             }
             opened.setParameters(parameters);
-            Camera.Size actualSize = opened.getParameters().getPreviewSize();
+            Camera.Parameters previewParameters = opened.getParameters();
+            Camera.Size actualSize = previewParameters.getPreviewSize();
             final int width = actualSize.width;
             final int height = actualSize.height;
             final int generation = ++cameraGeneration;
@@ -256,6 +276,7 @@ public final class CameraScanActivity extends Activity implements SurfaceHolder.
             opened.addCallbackBuffer(new byte[bufferBytes]);
             lastDecodeAt = 0;
             opened.startPreview();
+            configureZoom(previewParameters);
             retryButton.setVisibility(View.GONE);
             status.setText("请将二维码完整放入画面");
             if (needsAutoFocus) mainHandler.postDelayed(autofocus, 350);
@@ -266,6 +287,51 @@ public final class CameraScanActivity extends Activity implements SurfaceHolder.
             closeFailedCamera(opened);
             showCameraError("无法打开相机，请关闭其他相机应用后重试。");
         }
+    }
+
+    private void configureZoom(Camera.Parameters parameters) {
+        try {
+            if (!parameters.isZoomSupported()) return;
+            int maxZoom = parameters.getMaxZoom();
+            if (maxZoom <= 0) return;
+            List<Integer> ratios = parameters.getZoomRatios();
+            int initialZoom = parameters.getZoom();
+            if (ratios == null || ratios.size() <= maxZoom || initialZoom < 0 || initialZoom > maxZoom) return;
+
+            zoomSlider.setMax(maxZoom);
+            zoomSlider.setProgress(initialZoom);
+            showZoomRatio(ratios.get(initialZoom));
+            zoomSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override public void onProgressChanged(SeekBar slider, int zoom, boolean fromUser) {
+                    if (!fromUser || camera == null || !resumed || completed.get()) return;
+                    try {
+                        Camera.Parameters current = camera.getParameters();
+                        current.setZoom(zoom);
+                        camera.setParameters(current);
+                        showZoomRatio(ratios.get(zoom));
+                    } catch (RuntimeException ignored) {
+                        // A driver may reject zoom even when it advertises support.
+                        hideZoomControls();
+                    }
+                }
+
+                @Override public void onStartTrackingTouch(SeekBar slider) { }
+                @Override public void onStopTrackingTouch(SeekBar slider) { }
+            });
+            zoomControls.setVisibility(View.VISIBLE);
+        } catch (RuntimeException ignored) {
+            // Malformed zoom metadata must not interrupt the preview.
+            hideZoomControls();
+        }
+    }
+
+    private void showZoomRatio(int ratio) {
+        zoomRatio.setText(String.format(Locale.getDefault(), "%.2f×", ratio / 100f));
+    }
+
+    private void hideZoomControls() {
+        zoomSlider.setOnSeekBarChangeListener(null);
+        zoomControls.setVisibility(View.GONE);
     }
 
     private void closeFailedCamera(Camera opened) {
@@ -415,6 +481,7 @@ public final class CameraScanActivity extends Activity implements SurfaceHolder.
 
     private void stopCamera() {
         mainHandler.removeCallbacks(autofocus);
+        hideZoomControls();
         Camera old = camera;
         camera = null;
         cameraGeneration++;
